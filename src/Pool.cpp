@@ -24,8 +24,8 @@ std::ostream &operator<<(std::ostream &ostream, const Pool &pool) {
   return ostream;
 }
 
-Pool::Pool(std::istream &istream) {
-  for (std::string line; std::getline(istream, line);) {
+Pool::Pool(std::istream &iss, std::ostream &oss) : _oss{oss} {
+  for (std::string line; std::getline(iss, line);) {
     auto start = line.cbegin();
     address_type addr{};
 
@@ -52,23 +52,23 @@ Pool::Pool(std::istream &istream) {
   std::sort(_pool.begin(), _pool.end(), std::greater<address_type>());
 }
 
-void Pool::filter(int first, std::ostream &oss) {
+void Pool::filter(int first) {
   for (const auto &addr : _pool)
     if (addr[0] == first)
-      oss << addr << '\n';
+      _oss << addr << '\n';
 }
 
-void Pool::filter(int first, int second, std::ostream &oss) {
+void Pool::filter(int first, int second) {
   for (const auto &addr : _pool)
     if (addr[0] == first && addr[1] == second)
-      oss << addr << '\n';
+      _oss << addr << '\n';
 }
 
-void Pool::filter_any(int value, std::ostream &oss) {
+void Pool::filter_any(int value) {
   for (const auto &addr : _pool)
     for (const auto &octet : addr)
       if (octet == value) {
-        oss << addr << '\n';
+        _oss << addr << '\n';
         break;
       }
 }

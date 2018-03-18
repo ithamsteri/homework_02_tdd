@@ -15,16 +15,17 @@ struct Pool {
   using pool_type = std::vector<address_type>;
 
   // Constructors
-  Pool(std::istream &istream = std::cin);
+  explicit Pool(std::istream &iss = std::cin, std::ostream &oss = std::cout);
 
   // Operators
   friend std::ostream &operator<<(std::ostream &, const Pool &);
 
   // Methods
-  void filter(int first, std::ostream &oss = std::cout);
-  void filter(int first, int second, std::ostream &oss = std::cout);
-  void filter_any(int value, std::ostream &oss = std::cout);
+  void filter(int first);
+  void filter(int first, int second);
+  void filter_any(int value);
 
 private:
   pool_type _pool;
+  std::ostream &_oss;
 };

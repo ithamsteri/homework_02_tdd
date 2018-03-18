@@ -11,15 +11,16 @@
 /// Это так называемый Test Fixture, который отвечает за создание и удаление
 /// объекта перед каждым Test Case или Test Suite.
 struct FilterFixture {
-  std::string testData{"1.16.37.242\t?\t?\n"
-                       "8.8.4.4\t    ?\t?\n"
-                       "1.15.88.38\t ?\t?\n"
-                       "12.52.1.105\t?\t?\n"
-                       "162.37.1.53\t?\t?\n"
-                       "73.22.37.37\t?\t?\n"
-                       "12.52.73.36\t?\t?\n"};
-  std::istringstream iss{testData};
-  Pool pool{iss};
+  std::string _testData{"1.16.37.242\t?\t?\n"
+                        "8.8.4.4\t    ?\t?\n"
+                        "1.15.88.38\t ?\t?\n"
+                        "12.52.1.105\t?\t?\n"
+                        "162.37.1.53\t?\t?\n"
+                        "73.22.37.37\t?\t?\n"
+                        "12.52.73.36\t?\t?\n"};
+  std::istringstream _iss{_testData};
+  std::ostringstream _oss{};
+  Pool _pool{_iss, _oss};
 };
 
 /// Данный тест проверяет корректность создания объекта Pool, где данные
@@ -93,36 +94,33 @@ BOOST_AUTO_TEST_CASE(PoolCreateNotCorrect_OctetLostBreak) {
 /// Создаём у Pool метод `filter`, который принимает 2 аргумента:
 /// значение первого октета и поток для вывода (по умолчанию std::cout).
 BOOST_FIXTURE_TEST_CASE(PoolFilter_OneArgument, FilterFixture) {
-  std::ostringstream oss{};
   std::string result("1.16.37.242\n"
                      "1.15.88.38\n");
 
-  pool.filter(1, oss);
+  _pool.filter(1);
 
-  BOOST_CHECK_EQUAL(oss.str(), result);
+  BOOST_CHECK_EQUAL(_oss.str(), result);
 }
 
 /// Идём по пути наименьшего сопротивления. Пишем тесты, чтобы они проходили.
 /// Второе требование: фильтрация по двум первым октетам. Для этого мы просто
 /// перегрузим метод filter с тремя аргументами: два октета и поток.
 BOOST_FIXTURE_TEST_CASE(PoolFilter_TwoArguments, FilterFixture) {
-  std::ostringstream oss{};
   std::string result("12.52.73.36\n"
                      "12.52.1.105\n");
 
-  pool.filter(12, 52, oss);
+  _pool.filter(12, 52);
 
-  BOOST_CHECK_EQUAL(oss.str(), result);
+  BOOST_CHECK_EQUAL(_oss.str(), result);
 }
 
 /// Осталось проверить третье требование: фильтрация по любому октету.
 BOOST_FIXTURE_TEST_CASE(PoolFilter_Any, FilterFixture) {
-  std::ostringstream oss{};
   std::string result("162.37.1.53\n"
                      "73.22.37.37\n"
                      "1.16.37.242\n");
 
-  pool.filter_any(37, oss);
+  _pool.filter_any(37);
 
-  BOOST_CHECK_EQUAL(oss.str(), result);
+  BOOST_CHECK_EQUAL(_oss.str(), result);
 }
