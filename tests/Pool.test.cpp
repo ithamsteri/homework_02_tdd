@@ -18,7 +18,7 @@ struct FilterFixture {
                        "162.37.1.53\t?\t?\n"
                        "73.22.37.37\t?\t?\n"
                        "12.52.73.36\t?\t?\n"};
-  std::istringstream iss {testData};
+  std::istringstream iss{testData};
   Pool pool{iss};
 };
 
@@ -94,7 +94,8 @@ BOOST_AUTO_TEST_CASE(PoolCreateNotCorrect_OctetLostBreak) {
 /// значение первого октета и поток для вывода (по умолчанию std::cout).
 BOOST_FIXTURE_TEST_CASE(PoolFilter_OneArgument, FilterFixture) {
   std::ostringstream oss{};
-  std::string result("1.16.37.242\n1.15.88.38\n");
+  std::string result("1.16.37.242\n"
+                     "1.15.88.38\n");
 
   pool.filter(1, oss);
 
@@ -106,7 +107,8 @@ BOOST_FIXTURE_TEST_CASE(PoolFilter_OneArgument, FilterFixture) {
 /// перегрузим метод filter с тремя аргументами: два октета и поток.
 BOOST_FIXTURE_TEST_CASE(PoolFilter_TwoArguments, FilterFixture) {
   std::ostringstream oss{};
-  std::string result("12.52.73.36\n12.52.1.105\n");
+  std::string result("12.52.73.36\n"
+                     "12.52.1.105\n");
 
   pool.filter(12, 52, oss);
 

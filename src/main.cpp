@@ -4,7 +4,7 @@
 
 #include "Pool.h"
 
-int main(int, char* []) {
+int main(int, char *[]) {
   Pool pool{};
 
   std::cout << pool;

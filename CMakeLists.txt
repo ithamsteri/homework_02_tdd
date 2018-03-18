@@ -24,7 +24,7 @@ add_executable(pool_test
     ${SOURCE_PATH}/Pool.cpp
 )
 
-set_target_properties(pool_test PROPERTIES
+set_target_properties(ip_filter pool_test PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
 )
@@ -41,4 +41,3 @@ set_target_properties(pool_test PROPERTIES
 enable_testing()
 
 add_test(PoolTest pool_test)
-
