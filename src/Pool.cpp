@@ -6,8 +6,6 @@
 #include <algorithm>
 #include <limits>
 
-static const char *msg_error = "Not correct IP address in input data.";
-
 std::ostream &operator<<(std::ostream &ostream,
                          const Pool::address_type &addr) {
   for (auto iter = addr.cbegin(); iter != addr.cend(); iter++) {
@@ -36,16 +34,16 @@ Pool::Pool(std::istream &istream) {
       while (iter != line.cend() && *iter != '.' && *iter != '\t')
         iter++;
 
-      if (iter == line.cend() || (*iter == '\t' && (i < addr.size() - 1)))
-        throw std::runtime_error(msg_error);
-
-      auto value = std::stoi(std::string(start, iter++));
-      if (value > std::numeric_limits<octet_type>::max() ||
-          value < std::numeric_limits<octet_type>::min())
-        throw std::runtime_error(msg_error);
-
-      addr[i] = static_cast<octet_type>(value);
-      start = iter;
+      if (iter != line.cend() && !(*iter == '\t' && (i < addr.size() - 1))) {
+        auto value = std::stoi(std::string(start, iter++));
+        if (value < std::numeric_limits<octet_type>::max() &&
+            value > std::numeric_limits<octet_type>::min()) {
+          addr[i] = static_cast<octet_type>(value);
+          start = iter;
+          continue;
+        }
+      }
+      throw std::runtime_error("Not correct IP address in input data.");
     }
 
     _pool.push_back(addr);
