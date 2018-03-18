@@ -6,9 +6,10 @@
 #include <algorithm>
 #include <limits>
 
-static const char* msg_error = "Not correct IP address in input data.";
+static const char *msg_error = "Not correct IP address in input data.";
 
-std::ostream &operator<<(std::ostream &ostream, const Pool::address_type &addr) {
+std::ostream &operator<<(std::ostream &ostream,
+                         const Pool::address_type &addr) {
   for (auto iter = addr.cbegin(); iter != addr.cend(); iter++) {
     if (iter != addr.cbegin())
       ostream << '.';
@@ -35,7 +36,7 @@ Pool::Pool(std::istream &istream) {
       while (iter != line.cend() && *iter != '.' && *iter != '\t')
         iter++;
 
-      if (iter == line.cend() || (*iter == '\t' && (i < addr.size()-1)))
+      if (iter == line.cend() || (*iter == '\t' && (i < addr.size() - 1)))
         throw std::runtime_error(msg_error);
 
       auto value = std::stoi(std::string(start, iter++));
@@ -50,23 +51,23 @@ Pool::Pool(std::istream &istream) {
     _pool.push_back(addr);
   }
 
-  std::sort(_pool.begin(), _pool.end(), std::greater<>());
+  std::sort(_pool.begin(), _pool.end(), std::greater<address_type>());
 }
 
 void Pool::filter(int first, std::ostream &oss) {
-  for(const auto &addr : _pool)
+  for (const auto &addr : _pool)
     if (addr[0] == first)
       oss << addr << '\n';
 }
 
 void Pool::filter(int first, int second, std::ostream &oss) {
-  for(const auto &addr : _pool)
+  for (const auto &addr : _pool)
     if (addr[0] == first && addr[1] == second)
       oss << addr << '\n';
 }
 
 void Pool::filter_any(int value, std::ostream &oss) {
-  for(const auto &addr : _pool)
+  for (const auto &addr : _pool)
     for (const auto &octet : addr)
       if (octet == value) {
         oss << addr << '\n';
