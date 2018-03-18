@@ -6,8 +6,7 @@
 #include <algorithm>
 #include <limits>
 
-std::ostream &operator<<(std::ostream &ostream,
-                         const Pool::address_type &addr) {
+std::ostream &operator<<(std::ostream &ostream, const address_type &addr) {
   for (auto iter = addr.cbegin(); iter != addr.cend(); iter++) {
     if (iter != addr.cbegin())
       ostream << '.';
@@ -24,7 +23,7 @@ std::ostream &operator<<(std::ostream &ostream, const Pool &pool) {
   return ostream;
 }
 
-Pool::Pool(std::istream &iss, std::ostream &oss) : _oss{oss} {
+Pool::Pool(std::istream &iss) {
   for (std::string line; std::getline(iss, line);) {
     auto start = line.cbegin();
     address_type addr{};
@@ -50,23 +49,11 @@ Pool::Pool(std::istream &iss, std::ostream &oss) : _oss{oss} {
   }
 }
 
-void Pool::filter(int first) {
-  for (const auto &addr : _pool)
-    if (addr[0] == first)
-      _oss << addr << '\n';
-}
-
-void Pool::filter(int first, int second) {
-  for (const auto &addr : _pool)
-    if (addr[0] == first && addr[1] == second)
-      _oss << addr << '\n';
-}
-
-void Pool::filter_any(int value) {
+void Pool::filter_any(std::ostream &oss, int value) {
   for (const auto &addr : _pool)
     for (const auto &octet : addr)
       if (octet == value) {
-        _oss << addr << '\n';
+        oss << addr << '\n';
         break;
       }
 }

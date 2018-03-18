@@ -19,8 +19,7 @@ struct FilterFixture {
                         "73.22.37.37\t?\t?\n"
                         "12.52.73.36\t?\t?\n"};
   std::istringstream _iss{_testData};
-  std::ostringstream _oss{};
-  Pool _pool{_iss, _oss};
+  Pool _pool{_iss};
 };
 
 /// Данный тест проверяет корректность создания объекта Pool, где данные
@@ -96,10 +95,11 @@ BOOST_AUTO_TEST_CASE(PoolCreateNotCorrect_OctetLostBreak) {
 BOOST_FIXTURE_TEST_CASE(PoolFilter_OneArgument, FilterFixture) {
   std::string result("1.16.37.242\n"
                      "1.15.88.38\n");
+  std::ostringstream oss{};
 
-  _pool.filter(1);
+  _pool.filter(oss, 1);
 
-  BOOST_CHECK_EQUAL(_oss.str(), result);
+  BOOST_CHECK_EQUAL(oss.str(), result);
 }
 
 /// Идём по пути наименьшего сопротивления. Пишем тесты, чтобы они проходили.
@@ -108,10 +108,11 @@ BOOST_FIXTURE_TEST_CASE(PoolFilter_OneArgument, FilterFixture) {
 BOOST_FIXTURE_TEST_CASE(PoolFilter_TwoArguments, FilterFixture) {
   std::string result("12.52.73.36\n"
                      "12.52.1.105\n");
+  std::ostringstream oss{};
 
-  _pool.filter(12, 52);
+  _pool.filter(oss, 12, 52);
 
-  BOOST_CHECK_EQUAL(_oss.str(), result);
+  BOOST_CHECK_EQUAL(oss.str(), result);
 }
 
 /// Осталось проверить третье требование: фильтрация по любому октету.
@@ -119,8 +120,9 @@ BOOST_FIXTURE_TEST_CASE(PoolFilter_Any, FilterFixture) {
   std::string result("162.37.1.53\n"
                      "73.22.37.37\n"
                      "1.16.37.242\n");
+  std::ostringstream oss{};
 
-  _pool.filter_any(37);
+  _pool.filter_any(oss, 37);
 
-  BOOST_CHECK_EQUAL(_oss.str(), result);
+  BOOST_CHECK_EQUAL(oss.str(), result);
 }
