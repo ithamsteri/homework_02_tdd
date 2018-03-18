@@ -6,16 +6,16 @@
 
 #include <array>
 #include <iostream>
-#include <vector>
+#include <set>
 
 struct Pool {
   // Type aliases
   using octet_type = uint8_t;
   using address_type = std::array<octet_type, 4>;
-  using pool_type = std::vector<address_type>;
+  using pool_type = std::multiset<address_type, std::greater<address_type>>;
 
   // Constructors
-  explicit Pool(std::istream &iss = std::cin, std::ostream &oss = std::cout);
+  Pool(std::istream &iss = std::cin, std::ostream &oss = std::cout);
 
   // Operators
   friend std::ostream &operator<<(std::ostream &, const Pool &);

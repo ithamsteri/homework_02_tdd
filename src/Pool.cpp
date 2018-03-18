@@ -11,7 +11,7 @@ std::ostream &operator<<(std::ostream &ostream,
   for (auto iter = addr.cbegin(); iter != addr.cend(); iter++) {
     if (iter != addr.cbegin())
       ostream << '.';
-    ostream << static_cast<int>(*iter);
+    ostream << static_cast<unsigned>(*iter);
   }
 
   return ostream;
@@ -46,10 +46,8 @@ Pool::Pool(std::istream &iss, std::ostream &oss) : _oss{oss} {
       throw std::runtime_error("Not correct IP address in input data.");
     }
 
-    _pool.push_back(addr);
+    _pool.insert(addr);
   }
-
-  std::sort(_pool.begin(), _pool.end(), std::greater<address_type>());
 }
 
 void Pool::filter(int first) {
