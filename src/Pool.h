@@ -22,15 +22,15 @@ struct Pool {
   friend std::ostream &operator<<(std::ostream &, const Pool &);
 
   // Methods
-  constexpr bool filter(address_type::const_iterator) { return true; }
+  bool filter(address_type::const_iterator) { return true; }
   template <typename Octet, typename... Octets>
-  constexpr bool filter(address_type::const_iterator iter, Octet octet,
+  bool filter(address_type::const_iterator iter, Octet octet,
                         Octets... octets) {
     return (*iter == octet) ? filter(++iter, octets...) : false;
   }
 
   template <typename... Octets>
-  constexpr void filter(std::ostream &oss, Octets... octets) {
+  void filter(std::ostream &oss, Octets... octets) {
     for (const auto &addr : _pool)
       if (filter(addr.cbegin(), octets...))
         oss << addr << '\n';
